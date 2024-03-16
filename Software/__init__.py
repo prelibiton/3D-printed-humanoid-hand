@@ -14,18 +14,19 @@ if __name__ =="__main__":
     window.title("Hand Control")
     window.geometry('650x500')
 
+    devices = []
+
     # connect to USB ISS Serial port
     if platform == "linux" or platform == "linux2":
         # linux
         print("Linux not supported at the moment!")
-        devices = []
     elif platform == "darwin":
         # OS X
         devices = glob.glob("/dev/cu.*")
     elif platform == "win32":
         # Windows
-        print("Windows not supported at the moment!")
-        devices = []
+        for port in list(serial.tools.list_ports.comports()): # create a list of com ['COM1','COM2']
+            devices += [port.device]
 
     usb_iss_label = tk.Label(text="USB ISS Serial port", width=20)
     usb_iss_label.grid(row=0, column=3)
