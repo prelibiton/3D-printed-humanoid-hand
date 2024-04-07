@@ -3,7 +3,6 @@ import serial
 import glob
 from sys import platform
 import time
-import threading
 
 import env
 
@@ -143,9 +142,9 @@ if __name__ =="__main__":
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x34\x08\x02')
-        # Append LSB value to bytearray
+        # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
-        # Append MSB value to bytearray
+        # Append first byte to USB ISS command
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
@@ -154,9 +153,9 @@ if __name__ =="__main__":
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x36\x08\x02')
-        # Append LSB value to bytearray
+        # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
-        # Append MSB value to bytearray
+        # Append first byte to USB ISS command
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
@@ -165,9 +164,9 @@ if __name__ =="__main__":
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x38\x08\x02')
-        # Append LSB value to bytearray
+        # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
-        # Append MSB value to bytearray
+        # Append first byte to USB ISS command
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
@@ -176,9 +175,9 @@ if __name__ =="__main__":
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x3A\x08\x02')
-        # Append LSB value to bytearray
+        # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
-        # Append MSB value to bytearray
+        # Append first byte to USB ISS command
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
@@ -187,34 +186,28 @@ if __name__ =="__main__":
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x3C\x08\x02')
-        # Append LSB value to bytearray
+        # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
-        # Append MSB value to bytearray
+        # Append first byte to USB ISS command
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
 
     def move_click(event):
         if thumb_is_selected.get():
-            t1 = threading.Thread(target=move_thumb, args=(int(thumb_entry.get()),))
-            t1.start()
-            t1.join()
+            move_thumb(int(thumb_entry.get()))
+
         if index_is_selected.get():
-            t2 = threading.Thread(target=move_index, args=(int(index_entry.get()),))
-            t2.start()
-            t2.join()
+            move_index(int(index_entry.get()))
+
         if middle_is_selected.get():
-            t3 = threading.Thread(target=move_middle, args=(int(middle_entry.get()),))
-            t3.start()
-            t3.join()
+            move_middle(int(middle_entry.get()))
+
         if ring_is_selected.get():
-            t4 = threading.Thread(target=move_ring, args=(int(ring_entry.get()),))
-            t4.start()
-            t4.join()
+            move_ring(int(ring_entry.get()))
+
         if pinky_is_selected.get():
-            t5 = threading.Thread(target=move_pinky, args=(int(pinky_entry.get()),))
-            t5.start()
-            t5.join()
+            move_pinky(int(pinky_entry.get()))
 
 
     move_button.bind("<Button-1>", move_click)
@@ -254,25 +247,19 @@ if __name__ =="__main__":
 
     def extend_click(event):
         if thumb_is_selected.get():
-            t1 = threading.Thread(target=extend_thumb)
-            t1.start()
-            t1.join()
+            extend_thumb()
+
         if index_is_selected.get():
-            t2 = threading.Thread(target=extend_index)
-            t2.start()
-            t2.join()
+            extend_index()
+
         if middle_is_selected.get():
-            t3 = threading.Thread(target=extend_middle)
-            t3.start()
-            t3.join()
+            extend_middle()
+
         if ring_is_selected.get():
-            t4 = threading.Thread(target=extend_ring)
-            t4.start()
-            t4.join()
+            extend_ring()
+
         if pinky_is_selected.get():
-            t5 = threading.Thread(target=extend_pinky)
-            t5.start()
-            t5.join()
+            extend_pinky()
 
     extend_button.bind("<Button-1>", extend_click)
 
@@ -311,25 +298,19 @@ if __name__ =="__main__":
 
     def bend_click(event):
         if thumb_is_selected.get():
-            t1 = threading.Thread(target=bend_thumb)
-            t1.start()
-            t1.join()
+            bend_thumb()
+
         if index_is_selected.get():
-            t2 = threading.Thread(target=bend_index)
-            t2.start()
-            t2.join()
+            bend_index()
+
         if middle_is_selected.get():
-            t3 = threading.Thread(target=bend_middle)
-            t3.start()
-            t3.join()
+            bend_middle()
+
         if ring_is_selected.get():
-            t4 = threading.Thread(target=bend_ring)
-            t4.start()
-            t4.join()
+            bend_ring()
+
         if pinky_is_selected.get():
-            t5 = threading.Thread(target=bend_pinky)
-            t5.start()
-            t5.join()
+            bend_pinky()
 
 
     bend_button.bind("<Button-1>", bend_click)
