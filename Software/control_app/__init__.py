@@ -85,6 +85,7 @@ if __name__ =="__main__":
     port_options.config(width=20)
     port_options.grid(row=1, column=3)
 
+    # Open serial open
     connect_button = tk.Button(
         text="Connect",
         width=8,
@@ -107,14 +108,30 @@ if __name__ =="__main__":
     def connect_click(event):
         global ser
         ser = serial.Serial(usb_iss.get())
-        ser.close()
         ser.open()
         if ser.isOpen():
             connection_label.config(text="Connected", fg="white", bg="green")
 
     connect_button.bind("<Button-1>", connect_click)
 
+    # Close serial port
+    close_button = tk.Button(
+        text="Close",
+        width=8,
+        height=3,
+        bg="white",
+        fg="black",
+        )
 
+    close_button.grid(row=2, column=4)
+
+    def close_click(event):
+        global ser
+        if ser.isOpen():
+            ser.close()
+            connection_label.config(text="Not Connected", fg="white", bg="black")
+
+    close_button.bind("<Button-1>", close_click)
 
     # FINGERS MENU
 
