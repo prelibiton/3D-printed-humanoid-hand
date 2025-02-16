@@ -1,17 +1,67 @@
 import tkinter as tk
 import serial
+from serial.tools import list_ports
 import glob
 from sys import platform
 import time
 
-import env
+extend_thumb = b'\x55\x34\x04\x01\x02'
+bend_thumb = b'\x55\x34\x04\x01\x01'
+
+extend_index = b'\x55\x36\x04\x01\x02'
+bend_index = b'\x55\x36\x04\x01\x01'
+
+extend_middle = b'\x55\x38\x04\x01\x02'
+bend_middle = b'\x55\x38\x04\x01\x01'
+
+extend_ring = b'\x55\x3A\x04\x01\x02'
+bend_ring = b'\x55\x3A\x04\x01\x01'
+
+extend_pinky = b'\x55\x3C\x04\x01\x02'
+bend_pinky = b'\x55\x3C\x04\x01\x01'
+
+commands = {}
+commands["thumb"] = {}
+commands["thumb"]["extend"] = extend_thumb
+commands["thumb"]["bend"] = bend_thumb
+
+commands["index"] = {}
+commands["index"]["extend"] = extend_index
+commands["index"]["bend"] = bend_index
+
+commands["middle"] = {}
+commands["middle"]["extend"] = extend_middle
+commands["middle"]["bend"] = bend_middle
+
+commands["ring"] = {}
+commands["ring"]["extend"] = extend_ring
+commands["ring"]["bend"] = bend_ring
+
+commands["pinky"] = {}
+commands["pinky"]["extend"] = extend_pinky
+commands["pinky"]["bend"] = bend_pinky
+
+MAX_POS_THUMB = 678
+MIN_POS_THUMB = 250
+
+MAX_POS_INDEX = 645
+MIN_POS_INDEX = 263
+
+MAX_POS_MIDDLE = 650
+MIN_POS_MIDDLE = 298
+
+MAX_POS_RING = 650
+MIN_POS_RING = 270
+
+MAX_POS_PINKY = 663
+MIN_POS_PINKY = 307
 
 ser = 0
 
 if __name__ =="__main__":
     window = tk.Tk()
     window.title("Hand Control")
-    window.geometry('650x500')
+    window.geometry('500x400')
 
     devices = []
 
@@ -31,7 +81,7 @@ if __name__ =="__main__":
     usb_iss_label.grid(row=0, column=3)
 
     usb_iss = tk.StringVar()
-    port_options = tk.OptionMenu(window, usb_iss, *devices)
+    port_options = tk.OptionMenu(window, usb_iss, 'COM1', *devices)
     port_options.config(width=20)
     port_options.grid(row=1, column=3)
 
@@ -77,7 +127,7 @@ if __name__ =="__main__":
     thumb_label.grid(row=6, column=1)
 
     thumb_entry = tk.Entry(width=10)
-    thumb_entry.insert(0, "Degress")
+    thumb_entry.insert(0, "Position")
     thumb_entry.grid(row=7, column=1)
 
     # INDEX
@@ -89,7 +139,7 @@ if __name__ =="__main__":
     index_label.grid(row=6, column=2)
 
     index_entry = tk.Entry(width=10)
-    index_entry.insert(0, "Degrees")
+    index_entry.insert(0, "Position")
     index_entry.grid(row=7, column=2)
 
     # MIDDLE
@@ -101,7 +151,7 @@ if __name__ =="__main__":
     middle_label.grid(row=6, column=3)
 
     middle_entry = tk.Entry(width=10)
-    middle_entry.insert(0, "Degrees")
+    middle_entry.insert(0, "Position")
     middle_entry.grid(row=7, column=3)
 
     # RING
@@ -113,7 +163,7 @@ if __name__ =="__main__":
     ring_label.grid(row=6, column=4)
 
     ring_entry = tk.Entry(width=10)
-    ring_entry.insert(0, "Degrees")
+    ring_entry.insert(0, "Position")
     ring_entry.grid(row=7, column=4)
 
     # PINKY
@@ -125,26 +175,27 @@ if __name__ =="__main__":
     pinky_label.grid(row=6, column=5)
 
     pinky_entry = tk.Entry(width=10)
-    pinky_entry.insert(0, "Degrees")
+    pinky_entry.insert(0, "Position")
     pinky_entry.grid(row=7, column=5)
 
+    empty_label = tk.Label(text="",width=10)
+    empty_label.grid(row=10, column=3)
 
     move_button = tk.Button(
         text="Move fingers",
-        width=8,
+        width=10,
         height=3,
         bg="white",
         fg="black",
         )
 
-    move_button.grid(row=8, column=3)
+    move_button.grid(row=11, column=3)
 
-    def move_thumb(degrees):
-        if (degrees < 0 or degrees > 90):
+    def move_thumb(position):
+        if (position < MIN_POS_THUMB or position > MAX_POS_THUMB):
             return
 
         global ser
-        position = env.MIN_POS_THUMB + int((env.MAX_POS_THUMB - env.MIN_POS_THUMB) * (degrees / 90))
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x34\x08\x02')
@@ -154,12 +205,11 @@ if __name__ =="__main__":
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
-    def move_index(degrees):
-        if (degrees < 0 or degrees > 90):
+    def move_index(position):
+        if (position < MIN_POS_INDEX or position > MAX_POS_INDEX):
             return
 
         global ser
-        position = env.MIN_POS_INDEX + int((env.MAX_POS_INDEX - env.MIN_POS_INDEX) * (degrees / 90))
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x36\x08\x02')
@@ -169,12 +219,11 @@ if __name__ =="__main__":
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
-    def move_middle(degrees):
-        if (degrees < 0 or degrees > 90):
+    def move_middle(position):
+        if (position < MIN_POS_MIDDLE or position > MAX_POS_MIDDLE):
             return
 
         global ser
-        position = env.MIN_POS_MIDDLE + int((env.MAX_POS_MIDDLE - env.MIN_POS_MIDDLE) * (degrees / 90))
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x38\x08\x02')
@@ -184,12 +233,11 @@ if __name__ =="__main__":
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
-    def move_ring(degrees):
-        if (degrees < 0 or degrees > 90):
+    def move_ring(position):
+        if (position < MIN_POS_RING or position > MAX_POS_RING):
             return
 
         global ser
-        position = env.MIN_POS_RING + int((env.MAX_POS_RING - env.MIN_POS_RING) * (degrees / 90))
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x3A\x08\x02')
@@ -199,14 +247,14 @@ if __name__ =="__main__":
         b.extend("{}{}".format('\\x', str(first)).encode())
         ser.write(b.decode('unicode_escape').encode("raw_unicode_escape"))
 
-    def move_pinky(degrees):
-        if (degrees < 0 or degrees > 90):
+    def move_pinky(position):
+        if (position < MIN_POS_PINKY or position > MAX_POS_PINKY):
             return
 
         global ser
-        position = env.MIN_POS_PINKY + int((env.MAX_POS_PINKY - env.MIN_POS_PINKY) * (degrees / 90))
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
+
         b = bytearray(b'\x55\x3C\x08\x02')
         # Append second byte to USB ISS command
         b.extend("{}{}".format('\\x', str(second)).encode())
@@ -250,7 +298,7 @@ if __name__ =="__main__":
         fg="black",
         )
 
-    extend_button.grid(row=9, column=3)
+    extend_button.grid(row=11, column=4)
 
     def extend_thumb():
         global ser
@@ -305,7 +353,7 @@ if __name__ =="__main__":
         fg="black",
         )
 
-    bend_button.grid(row=10, column=3)
+    bend_button.grid(row=11, column=2)
 
     def bend_thumb():
         global ser
@@ -318,7 +366,7 @@ if __name__ =="__main__":
     def bend_middle():
         global ser
         ser.write(env.commands["middle"]["bend"])
-    
+
     def bend_ring():
         global ser
         ser.write(env.commands["ring"]["bend"])
