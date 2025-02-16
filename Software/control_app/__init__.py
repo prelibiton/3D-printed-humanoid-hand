@@ -41,20 +41,20 @@ commands["pinky"] = {}
 commands["pinky"]["extend"] = extend_pinky
 commands["pinky"]["bend"] = bend_pinky
 
-MAX_POS_THUMB = 678
-MIN_POS_THUMB = 250
+MAX_POS_THUMB = 655
+MIN_POS_THUMB = 377
 
-MAX_POS_INDEX = 645
-MIN_POS_INDEX = 263
+MAX_POS_INDEX = 649
+MIN_POS_INDEX = 250
 
 MAX_POS_MIDDLE = 650
-MIN_POS_MIDDLE = 298
+MIN_POS_MIDDLE = 295
 
 MAX_POS_RING = 650
-MIN_POS_RING = 270
+MIN_POS_RING = 265
 
-MAX_POS_PINKY = 663
-MIN_POS_PINKY = 307
+MAX_POS_PINKY = 662
+MIN_POS_PINKY = 300
 
 ser = 0
 
@@ -210,6 +210,7 @@ if __name__ =="__main__":
             return
 
         global ser
+
         position = hex(position)[2:].zfill(4)
         first, second = position[0:2], position[2:4]
         b = bytearray(b'\x55\x36\x08\x02')
@@ -302,23 +303,23 @@ if __name__ =="__main__":
 
     def extend_thumb():
         global ser
-        ser.write(env.commands["thumb"]["extend"])
+        ser.write(commands["thumb"]["extend"])
 
     def extend_index():
         global ser
-        ser.write(env.commands["index"]["extend"])
+        ser.write(commands["index"]["extend"])
 
     def extend_middle():
         global ser
-        ser.write(env.commands["middle"]["extend"])
+        ser.write(commands["middle"]["extend"])
 
     def extend_ring():
         global ser
-        ser.write(env.commands["ring"]["extend"])
+        ser.write(commands["ring"]["extend"])
 
     def extend_pinky():
         global ser
-        ser.write(env.commands["pinky"]["extend"])
+        ser.write(commands["pinky"]["extend"])
 
     def extend_click(event):
         if thumb_is_selected.get():
@@ -357,23 +358,23 @@ if __name__ =="__main__":
 
     def bend_thumb():
         global ser
-        ser.write(env.commands["thumb"]["bend"])
+        ser.write(commands["thumb"]["bend"])
 
     def bend_index():
         global ser
-        ser.write(env.commands["index"]["bend"])
+        ser.write(commands["index"]["bend"])
 
     def bend_middle():
         global ser
-        ser.write(env.commands["middle"]["bend"])
+        ser.write(commands["middle"]["bend"])
 
     def bend_ring():
         global ser
-        ser.write(env.commands["ring"]["bend"])
+        ser.write(commands["ring"]["bend"])
 
     def bend_pinky():
         global ser
-        ser.write(env.commands["pinky"]["bend"])
+        ser.write(commands["pinky"]["bend"])
 
 
     def bend_click(event):
