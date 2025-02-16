@@ -14,6 +14,9 @@ https://ieeexplore.ieee.org/document/10278809
 I. Chavdarov, B. Naydenov, V. Nikolov and I. Georgiev, "Modular Design, Communication and Control Systems of a 3D-printed Humanoid Robotic Hand," in Journal of Communications Software and Systems, vol. 20, no. 2, pp. 146-156, March 2024, doi: https://doi.org/10.24138/jcomss-2023-0168
 https://jcoms.fesb.unist.hr/10.24138/jcomss-2023-0168/
 
+I. Georgiev, V. Nikolov, I. Chavdarov and B. Naydenov, "Grasp planning and sign language gestures with 3D printed humanoid hand," 2024 XXXIII International Scientific Conference Electronics (ET), Sozopol, Bulgaria, 2024, pp. 1-5, doi: 10.1109/ET63133.2024.10721540.
+https://ieeexplore.ieee.org/document/10721540
+
 
 Click on the videos below.
 ## How a finger gets 3D printed
